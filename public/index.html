@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WhatsApp Mesaj Gönderimi</title>
+    <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+</head>
+<body>
+    <h1>WhatsApp Mesaj Gönderimi</h1>
+    <div id="qrcode"></div>
+    
+    <form action="/send-message" method="POST">
+        <label for="message">Mesaj:</label>
+        <input type="text" id="message" name="message" required>
+        <button type="submit">Gönder</button>
+    </form>
+    
+    <script>
+        const qrDiv = document.getElementById('qrcode');
+        const qrcode = new QRCode(qrDiv, {
+            text: 'SCAN_REQUIRED',
+            width: 256,
+            height: 256
+        });
+
+        const socket = io(); // Эта строка подключает socket.io
+
+        // Ожидание получения QR-кода от сервера
+        socket.on('qr', (qrData) => {
+            qrcode.clear();
+            qrcode.makeCode(qrData);
+        });
+    </script>
+</body>
+</html>
